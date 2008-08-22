@@ -1,0 +1,13 @@
+<project>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>pytest-plugin</artifactId>
+          <configuration>
+            <sourceDirectory>.</sourceDirectory>
+            <testDirectory>target/test-classes/</testDirectory>
+          </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

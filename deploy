@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mvn clean install deploy:deploy-file -Durl=file:/tmp -Drepository=icecube.wisc.edu -Dfile=target/pytest-plugin-*jar -DpomFile=pom.xml
+
