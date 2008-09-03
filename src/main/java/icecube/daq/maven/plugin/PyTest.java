@@ -183,10 +183,8 @@ public class PyTest
                     new PyTestParser(outLines, data);
                 } catch (PyTestException pte) {
                     data = null;
-                    if (runner.getExitValue() == 0) {
-                        getLog().error("Couldn't parse output from " +
-                                       f.getName(), pte);
-                    }
+                    getLog().error("Couldn't parse output from " + f.getName(),
+                                   pte);
                 }
 
                 if (useFile) {
