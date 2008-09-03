@@ -168,7 +168,7 @@ class TestXMLParser
     public void characters(char[] ch, int start, int length)
         throws SAXException
     {
-        String line = String.valueOf(ch, start, length).trim();
+        String line = String.valueOf(ch, start, length);
 
         if (state == IN_ERROR || state == IN_FAILURE) {
             if (curError == null) {
@@ -177,7 +177,7 @@ class TestXMLParser
 
             if (!curError.hasExceptionText()) {
                 curError.setExceptionText(line);
-            } else if (line.length() > 0) {
+            } else if (line.trim().length() > 0) {
                 if (tracebackParser == null) {
                     tracebackParser = new TracebackParser();
                 }
@@ -199,7 +199,7 @@ class TestXMLParser
             }
 
             curOut.addLine(line);
-        } else if (line.length() > 0) {
+        } else if (line.trim().length() > 0) {
             System.out.println(":: " + line);
         }
     }
