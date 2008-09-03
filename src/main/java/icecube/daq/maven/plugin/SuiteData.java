@@ -6,8 +6,8 @@ import java.io.PrintStream;
 import java.text.DecimalFormat;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Python unit test suite results.
@@ -33,8 +33,10 @@ public class SuiteData
     /** List of individual test case data. */
     private List cases;
 
-    /** Standard output/error stream data from tests. */
-    private StreamData sysOut, sysErr;
+    /** Standard output stream data from tests. */
+    private StreamData sysOut;
+    /** Standard error stream data from tests. */
+    private StreamData sysErr;
 
     /**
      * Create test suite data holder.
@@ -43,14 +45,14 @@ public class SuiteData
      */
     SuiteData(File file)
     {
-        String name = file.getName();
+        String fName = file.getName();
 
-        int dot = name.lastIndexOf(".");
+        int dot = fName.lastIndexOf(".");
         if (dot > 0) {
-            name = name.substring(0, dot);
+            fName = fName.substring(0, dot);
         }
 
-        this.name = name;
+        this.name = fName;
     }
 
     /**

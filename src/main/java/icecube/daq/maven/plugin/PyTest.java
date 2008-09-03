@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.io.StringBufferInputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,7 +72,7 @@ public class PyTest
      */
     private String testName;
 
-    private static final File buildPath(String dir, String defaultDir)
+    private static File buildPath(String dir, String defaultDir)
     {
         if (dir == null) {
             dir = defaultDir;
@@ -96,6 +95,9 @@ public class PyTest
 
     /**
      * Run Python unit tests.
+     *
+     * @throws MojoExecutionException if tests could not be executed
+     * @throws MojoFailureException if one or more tests failed
      */
     public void execute()
         throws MojoExecutionException, MojoFailureException
@@ -245,7 +247,7 @@ public class PyTest
      * @param dir top directory
      * @param fileList list of files found
      */
-    private final void findTests(FileFilter filter, File dir, List fileList)
+    private void findTests(FileFilter filter, File dir, List fileList)
     {
         File[] list = dir.listFiles(filter);
         if (list == null) {
@@ -297,27 +299,6 @@ public class PyTest
         }
 
         return allDirs;
-    }
-
-    /**
-     * @return <tt>-1</tt> if at end of file, otherwise returns number
-     *         of characters read
-     */
-    private int readData(BufferedReader rdr, boolean isError)
-        throws IOException
-    {
-        String line = rdr.readLine();
-        if (line == null) {
-            return -1;
-        }
-
-        if (isError) {
-            getLog().error(line);
-        } else {
-            getLog().info(line);
-        }
-
-        return line.length();
     }
 
     /**
@@ -479,14 +460,14 @@ class TestRunner
      *
      * @return encapsulated input stream
      */
-    private static final BufferedReader openReader(InputStream in)
+    private static BufferedReader openReader(InputStream in)
     {
         return new BufferedReader(new InputStreamReader(in));
     }
 
     /**
      * Reset to the initial state.
-     */ 
+     */
     void reset()
     {
         badOption = false;
@@ -534,9 +515,10 @@ class TestRunner
         }
 
         BufferedReader stdout = openReader(proc.getInputStream());
-        BufferedReader stderr = null;//openReader(proc.getErrorStream());
+        // ignoring error stream
+        BufferedReader stderr = null;
 
-        while (stdout !=null || stderr != null) {
+        while (stdout != null || stderr != null) {
             String line;
 
             for (int i = 0; i < 2; i++) {
@@ -564,15 +546,13 @@ class TestRunner
                     if (line == null) {
                         rdr = null;
                     } else {
-                        if (list.size() == 0) {
-                            if (line.contains("option " + arg +
-                                              " not recognized"))
-                            {
-                                badOption = true;
-                                stdout = null;
-                                stderr = null;
-                                proc.destroy();
-                            }
+                        if (list.size() == 0 &&
+                            line.contains("option " + arg + " not recognized"))
+                        {
+                            badOption = true;
+                            stdout = null;
+                            stderr = null;
+                            proc.destroy();
                         }
 
                         list.add(line);
@@ -591,8 +571,8 @@ class TestRunner
 
         try {
             proc.waitFor();
-        } catch (Exception ex) {
-            throw new PyTestException("Couldn't wait for " + testFile, ex);
+        } catch (InterruptedException ie) {
+            throw new PyTestException("Couldn't wait for " + testFile, ie);
         }
 
         exitVal = proc.exitValue();

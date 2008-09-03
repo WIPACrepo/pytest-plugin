@@ -1,7 +1,5 @@
 package icecube.daq.maven.plugin;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -601,7 +599,8 @@ class TestTextParser
         Pattern.compile("Ran (\\d+) tests? in (\\d+\\.\\d+)s\\s*$");
     /** Match a failed test suite summary line. */
     private static final Pattern failPat =
-        Pattern.compile("FAILED\\s+\\((\\S+)=(\\d+)(,\\s+(\\S+)=(\\d+))?\\)\\s*$");
+        Pattern.compile("FAILED\\s+\\((\\S+)=(\\d+)(,\\s+(\\S+)" +
+                        "=(\\d+))?\\)\\s*$");
 
     /** All possible parser states. */
     private static final int INITIAL = 1;
@@ -971,8 +970,19 @@ class ListReader
     }
 }
 
+/**
+ * Python unit test output parser.
+ */
 public class PyTestParser
 {
+    /**
+     * Parse Python XML or plain-text output.
+     *
+     * @param lines unit test output lines
+     * @param data test suite data container
+     *
+     * @throws PyTestException if the lines cannot be parsed
+     */
     public PyTestParser(List lines, SuiteData data)
         throws PyTestException
     {
