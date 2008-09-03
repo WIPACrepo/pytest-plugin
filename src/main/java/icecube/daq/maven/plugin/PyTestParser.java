@@ -55,7 +55,7 @@ class TracebackParser
         Pattern.compile("^\\s*in (\\S+)\\s*$");
     /** Match a traceback exception line. */
     private static final Pattern excPat =
-        Pattern.compile("^(\\S+):\\s+(.*)\\s*$");
+        Pattern.compile("^(\\S+)(:\\s+(.*))?\\s*$");
     /** Match a traceback source line. */
     private static final Pattern sourcePat =
         Pattern.compile("^\\s*(\\S.*\\S*)\\s*$");
@@ -595,7 +595,7 @@ class TestTextParser
         Pattern.compile("^Traceback \\(most recent call last\\):\\s*$");
     /** Match a test case detail type line. */
     private static final Pattern detailTypePat =
-        Pattern.compile("^(\\S+):\\s+(.*)\\s*$");
+        Pattern.compile("^(\\S+)(:\\s+(.*))?\\s*$");
     /** Match a successful test suite summary line. */
     private static final Pattern runPat =
         Pattern.compile("Ran (\\d+) tests? in (\\d+\\.\\d+)s\\s*$");
