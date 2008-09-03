@@ -313,7 +313,7 @@ class TestXMLParser
                                        localName + ">");
             }
         } else {
-            System.err.println("Unknown state " + state);
+            System.err.println("Unknown state " + getStateName(state));
         }
     }
 
@@ -325,6 +325,46 @@ class TestXMLParser
     public void endPrefixMapping(String prefix)
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Return the name of the state value.
+     *
+     * @param state state value
+     *
+     * @return state name
+     */
+    private static String getStateName(int state)
+    {
+        String name;
+        switch (state) {
+        case INITIAL:
+            name = "INITIAL";
+            break;
+        case IN_SUITE:
+            name = "IN_SUITE";
+            break;
+        case IN_CASE:
+            name = "IN_CASE";
+            break;
+        case IN_STDOUT:
+            name = "IN_STDOUT";
+            break;
+        case IN_STDERR:
+            name = "IN_STDERR";
+            break;
+        case IN_ERROR:
+            name = "IN_ERROR";
+            break;
+        case IN_FAILURE:
+            name = "IN_FAILURE";
+            break;
+        default:
+            name = "UnknownState#" + state;
+            break;
+        }
+
+        return name;
     }
 
     /**
@@ -555,7 +595,7 @@ class TestXMLParser
                 System.out.println("Ignoring <" + localName + ">");
             }
         } else {
-            System.err.println("Unknown state " + state);
+            System.err.println("Unknown state " + getStateName(state));
         }
     }
 
@@ -636,6 +676,49 @@ class TestTextParser
     TestTextParser(SuiteData data)
     {
         this.data = data;
+    }
+
+    /**
+     * Return the name of the state value.
+     *
+     * @param state state value
+     *
+     * @return state name
+     */
+    private static String getStateName(int state)
+    {
+        String name;
+        switch (state) {
+        case INITIAL:
+            name = "INITIAL";
+            break;
+        case IN_CASE:
+            name = "IN_CASE";
+            break;
+        case IN_DETAIL:
+            name = "IN_DETAIL";
+            break;
+        case IN_DETAIL_SEP:
+            name = "IN_DETAIL_SEP";
+            break;
+        case IN_DETAIL_BODY:
+            name = "IN_DETAIL_BODY";
+            break;
+        case IN_DETAIL_END:
+            name = "IN_DETAIL_END";
+            break;
+        case IN_FINAL:
+            name = "IN_FINAL";
+            break;
+        case IN_STDOUT:
+            name = "IN_STDOUT";
+            break;
+        default:
+            name = "UnknownState#" + state;
+            break;
+        }
+
+        return name;
     }
 
     /**
@@ -913,7 +996,7 @@ class TestTextParser
             }
 
             if (line.trim().length() > 0) {
-                System.out.println("BAD<" + state + ">: " + line);
+                System.out.println("BAD<" + getStateName(state) + ">: " + line);
             }
         }
 
