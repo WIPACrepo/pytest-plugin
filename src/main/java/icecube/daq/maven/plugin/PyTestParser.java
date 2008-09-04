@@ -1069,10 +1069,34 @@ public class PyTestParser
     public PyTestParser(List lines, SuiteData data)
         throws PyTestException
     {
-        try {
-            TestXMLParser txtParser = new TestXMLParser(data);
-            txtParser.parse(lines);
-        } catch (SAXException se) {
+        this(lines, data, true);
+    }
+
+    /**
+     * Parse Python XML or plain-text output.
+     *
+     * @param lines unit test output lines
+     * @param data test suite data container
+     *
+     * @throws PyTestException if the lines cannot be parsed
+     */
+    public PyTestParser(List lines, SuiteData data, boolean isXML)
+        throws PyTestException
+    {
+        boolean tryText;
+        if (!isXML) {
+            tryText = true;
+        } else {
+            try {
+                TestXMLParser txtParser = new TestXMLParser(data);
+                txtParser.parse(lines);
+                tryText = false;
+            } catch (SAXException se) {
+                tryText = true;
+            }
+        }
+
+        if (tryText) {
             TestTextParser txtParser = new TestTextParser(data);
             txtParser.parse(lines);
         }

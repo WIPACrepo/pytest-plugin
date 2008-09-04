@@ -203,7 +203,7 @@ public class PyTest
                 // try running tests using xmlrunner
                 runner.runTests(path, "-x");
                 // if that failed, use whatever test runner is available
-                if (runner.isBadOption()) {
+                if (!runner.isTextOutput() && !runner.isXMLOutput()) {
                     runner.reset();
                     runner.runTests(path, "-v");
                 }
@@ -322,8 +322,10 @@ class TestRunner
     /** Python test script. */
     private File testFile;
 
-    /** Did Python complain about the specified argument? */
-    private boolean badOption;
+    /** Does this test output contain an expected text output line? */
+    private boolean isText;
+    /** Does this test output contain an expected XML output line? */
+    private boolean isXML;
 
     /** Lines written to the standard output stream. */
     private ArrayList outLines = new ArrayList();
@@ -415,13 +417,23 @@ class TestRunner
     }
 
     /**
-     * Did Python complain about the specified argument?
+     * Does this test output contain an expected text output line?
      *
-     * @return <tt>true</tt> if the argument was invalid
+     * @return <tt>true</tt> if the output appears to be text-oriented
      */
-    boolean isBadOption()
+    boolean isTextOutput()
     {
-        return badOption;
+        return isText;
+    }
+
+    /**
+     * Does this test output contain an expected XML output line?
+     *
+     * @return <tt>true</tt> if the output appears to be XML-oriented
+     */
+    boolean isXMLOutput()
+    {
+        return isXML;
     }
 
     /**
@@ -441,7 +453,8 @@ class TestRunner
      */
     void reset()
     {
-        badOption = false;
+        isText = false;
+        isXML = false;
         outLines.clear();
         errLines.clear();
         exitVal = -1;
@@ -517,13 +530,13 @@ class TestRunner
                     if (line == null) {
                         rdr = null;
                     } else {
-                        if (list.size() == 0 &&
-                            line.contains("option " + arg + " not recognized"))
+                        if (line.startsWith("Ran ") &&
+                            (line.contains(" test in ") ||
+                             line.contains(" tests in ")))
                         {
-                            badOption = true;
-                            stdout = null;
-                            stderr = null;
-                            proc.destroy();
+                            isText = true;
+                        } else if (line.startsWith("<testsuite")) {
+                            isXML = true;
                         }
 
                         list.add(line);
@@ -547,5 +560,11 @@ class TestRunner
         }
 
         exitVal = proc.exitValue();
+
+        if (isText && isXML) {
+            final String errMsg = "Test output has both text and XML elements";
+
+            throw new PyTestException(errMsg);
+        }
     }
 }
