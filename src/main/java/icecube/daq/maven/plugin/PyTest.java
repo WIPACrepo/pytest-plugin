@@ -2,7 +2,6 @@ package icecube.daq.maven.plugin;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,6 +17,8 @@ import java.util.Map;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+
+import org.codehaus.plexus.util.DirectoryScanner;
 
 /**
  * Run Python unit tests.
@@ -72,6 +73,28 @@ public class PyTest
      */
     private String testName;
 
+    /**
+     * List of patterns for included Python tests.
+     *
+     * @parameter expression=""
+     */
+    private String[] includes;
+
+    /**
+     * List of patterns for included Python tests if none were supplied.
+     */
+    private static String[] defaultIncludes = {
+        "**/test*.py",
+        "**/*test.py",
+    };
+
+    /**
+     * List of patterns for excluded Python tests.
+     *
+     * @parameter expression=""
+     */
+    private String[] excludes;
+
     private static File buildPath(String dir, String defaultDir)
     {
         if (dir == null) {
@@ -102,8 +125,6 @@ public class PyTest
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
-        ArrayList pyFiles = new ArrayList();
-
         // if surefire.useFile is false, try pytest.useFile
         if (pyUseFile) {
             useFile = true;
@@ -121,32 +142,43 @@ public class PyTest
                                              "\" does not exist");
         }
 
-        PyFilter pyFilter = new PyFilter();
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setBasedir(testPath);
+        scanner.setExcludes(excludes);
+        if (includes == null) {
+            scanner.setIncludes(defaultIncludes);
+        } else {
+            scanner.setIncludes(includes);
+        }
+        scanner.addDefaultExcludes();
+        scanner.setCaseSensitive(false);
+        scanner.scan();
 
-        findTests(pyFilter, testPath, pyFiles);
+        String[] tstNames = scanner.getIncludedFiles();
+        if (tstNames == null) {
+            tstNames = new String[0];
+        }
 
-        HashMap allDirs = getSourcePaths(pyFilter, srcPath);
-        for (Iterator it = pyFiles.iterator(); it.hasNext(); ) {
-            File f = (File) it.next();
+        HashMap allDirs = getSourcePaths(srcPath);
 
+        for (int i = 0; i < tstNames.length; i++) {
+            File f = new File(testPath, tstNames[i]);
+
+            // add test directory to python path
             if (!allDirs.containsKey(f.getParent())) {
                 allDirs.put(f.getParent(), f.getParent());
             }
 
-            final String fName = f.getName();
+            // exclude test specified by -Dtest=
+            if (testName != null) {
+                final String fName = f.getName();
 
-            String name = fName.toLowerCase();
-            if (!name.startsWith("test") &&
-                !(name.endsWith("test") || name.endsWith("test.py")))
-            {
-                it.remove();
-            } else if (testName != null) {
                 if (!fName.startsWith(testName)) {
-                    it.remove();
+                    tstNames[i] = null;
                 } else if (!fName.equals(testName) &&
                            fName.charAt(testName.length()) != '.')
                 {
-                    it.remove();
+                    tstNames[i] = null;
                 }
             }
         }
@@ -158,8 +190,12 @@ public class PyTest
         int totErrs = 0;
 
         ArrayList failed = new ArrayList();
-        for (Iterator it = pyFiles.iterator(); it.hasNext(); ) {
-            File f = (File) it.next();
+        for (int i = 0; i < tstNames.length; i++) {
+            if (tstNames[i] == null) {
+                continue;
+            }
+
+            File f = new File(testPath, tstNames[i]);
 
             System.out.println("Running " + f.getName());
             TestRunner runner = new TestRunner(pythonExecutable, f);
@@ -239,100 +275,35 @@ public class PyTest
         }
     }
 
-    /**
-     * Find all Python files matching 'filter' under 'dir'
-     * or its subdirectories, and return the result in 'fileList'.
-     *
-     * @param filter file filter
-     * @param dir top directory
-     * @param fileList list of files found
-     */
-    private void findTests(FileFilter filter, File dir, List fileList)
+    private HashMap getSourcePaths(File srcDir)
     {
-        File[] list = dir.listFiles(filter);
-        if (list == null) {
-            getLog().error("Didn't find any files in " + dir);
-            return;
-        }
+        HashMap allDirs = new HashMap();
 
-        for (int i = 0; i < list.length; i++) {
-            if (list[i].isDirectory()) {
-                findTests(filter, list[i], fileList);
-            } else {
-                File f;
-                try {
-                    f = new File(list[i].getCanonicalPath());
-                } catch (IOException ioe) {
-                    f = list[i];
-                }
-                fileList.add(f);
-            }
-        }
-    }
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setBasedir(srcDir);
+        scanner.setIncludes(new String[] { "**/*.py" });
+        scanner.addDefaultExcludes();
+        scanner.setCaseSensitive(false);
+        scanner.scan();
 
-    private HashMap getSourcePaths(FileFilter filter, File dir)
-    {
-        return getSourcePaths(filter, dir, new HashMap());
-    }
+        String[] incFiles = scanner.getIncludedFiles();
+        for (int i = 0; i < incFiles.length; i++) {
+            File tmp = new File(srcDir, incFiles[i]);
 
-    private HashMap getSourcePaths(FileFilter filter, File dir, HashMap allDirs)
-    {
-        File[] list = dir.listFiles(filter);
-
-        boolean found = false;
-        for (int i = 0; i < list.length; i++) {
-            if (list[i].isDirectory()) {
-                getSourcePaths(filter, list[i], allDirs);
-            } else {
-                found = true;
-            }
-        }
-
-        if (found) {
             File f;
             try {
-                f = new File(dir.getCanonicalPath());
+                f = tmp.getCanonicalFile();
             } catch (IOException ioe) {
-                f = dir;
+                f = tmp;
             }
-            allDirs.put(f, f);
+
+            File dir = f.getParentFile();
+            if (!allDirs.containsKey(dir)) {
+                allDirs.put(dir, dir);
+            }
         }
 
         return allDirs;
-    }
-
-    /**
-     * Find all Python files (as indicated by the '.py' extension),
-     * skipping over '.svn' and 'cvs' subdirectories.
-     */
-    class PyFilter
-        implements FileFilter
-    {
-        /**
-         * Accept non-revision control directories and
-         * files ending in '.py', '.PY', etc.
-         *
-         * @param file file being filtered
-         */
-        public boolean accept(File file)
-        {
-            if (file.isDirectory()) {
-                if (file.getName().equalsIgnoreCase(".svn") ||
-                    file.getName().equalsIgnoreCase("cvs"))
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            String name = file.getName().toLowerCase();
-            if (!name.endsWith(".py")) {
-                return false;
-            }
-
-            return true;
-        }
     }
 }
 
