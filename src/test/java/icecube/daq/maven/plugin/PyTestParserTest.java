@@ -137,8 +137,6 @@ public class PyTestParserTest
     public void testBasic()
         throws IOException, PyTestException
     {
-        System.err.println("Basedir is "+getBasedir());
-
         File tstDir =
             new File(getBasedir(), "/target/test-classes/test-output");
 
