@@ -1,0 +1,66 @@
+                 ---
+                 Usage
+                 ---
+                 Dave Glowacki
+		 ---
+		  8 September 2008
+
+
+Usage
+
+ You can run Python unit tests within a Maven2 project.
+
+* Running Tests
+
+  To run Python unit tests, execute:
+
++--
+mvn test
++--
+
+ This will run all the Python unit tests (files ending with <<<.py>>> and
+ either starting with <<<test>>> or with <<<test>>> immediately before the
+ <<<.py>>> -- case is ignored, so both <<<TESTFOO.PY>>> and <<<footest.py>>>
+ will be run)
+
+ You can also use <<<\<includes\>>>> and/or <<<\<excludes\>>>> specifiers
+ in the plugin's <<<\<configuration\>>>> section to specify the tests.
+
+* Running a Single Test
+
+ You can specify a test to run with the <<<-Dtest=>>> argument:
+
++--
+mvn -Dtest=fooTest test
++--
+
+ You can also add a <<<\<testName\>>>> entry in the plugin's
+ <<<\<configuration\>>>> section, or use <<<\<includes\>>>> and/or
+ <<<\<excludes\>>>> specifiers to limit the tests.
+
+* Specifying the Python executable
+
+ By default, the first <<<python>>> executable in your path is used to run
+ the tests.  You can change this with the <<<-Dpython=/path/to/python>>>
+ argument.
+
++--
+mvn -Dpython=/opt/local/bin/python3.0 test
++--
+
+ You can also add a <<<\<pythonExecutable\>>>> entry in the plugin's
+ <<<\<configuration\>>>> section.
+
+* Specifying the Source and Test Directories.
+
+ By default, the standard Maven directories <<<src/main/python>>> and
+ <<<src/test/python>>> are searched for Python source files and unit test
+ files, respectively.  You can change this with the <<<-DsourceDir=>>> and
+ <<<-DtestDir=>>> arguments:
+
++--
+mvn -DsourceDir=src/main/scripts -Dtest=src/main/scripts/test test
++--
+
+ You can also add <<<\<sourceDirectory\>>>> and <<<\<testDirectory\>>>> entries
+ in the plugin's <<<\<configuration\>>>> section.

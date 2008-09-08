@@ -1,0 +1,12 @@
+<project name="Python Unit Test Plugin">
+  <bannerLeft><name>Python Unit Test Plugin</name></bannerLeft>
+  <body>
+    <menu name="Overview">
+      <item name="Introduction" href="index.html"/>
+      <item name="Usage" href="usage.html"/>
+      <item name="APT Guide" href="format.html"/>
+    </menu>
+    <menu ref="reports"/>
+    <!-- <menu ref="modules"/> -->
+  </body>
+</project>
