@@ -183,6 +183,16 @@ public class SuiteData
     }
 
     /**
+     * Get the total time taken to run tests.
+     *
+     * @return total time
+     */
+    double getTime()
+    {
+        return time;
+    }
+
+    /**
      * Get lines of text written to the standard output stream.
      *
      * @return output text lines
