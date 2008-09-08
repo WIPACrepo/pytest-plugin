@@ -168,40 +168,14 @@ class TestXMLParser
     public void characters(char[] ch, int start, int length)
         throws SAXException
     {
-        String line = String.valueOf(ch, start, length);
-
-        if (state == IN_ERROR || state == IN_FAILURE) {
-            if (curError == null) {
-                throw new SAXException("No active error object");
+        int substart = start;
+        for (int i = start; i < start + length; i++) {
+            if (ch[i] == '\n' || ch[i] == '\r') {
+                parseLine(String.valueOf(ch, substart, i - substart));
+                substart = i + 1;
             }
-
-            if (!curError.hasExceptionText()) {
-                curError.setExceptionText(line);
-            } else if (line.trim().length() > 0) {
-                if (tracebackParser == null) {
-                    tracebackParser = new TracebackParser();
-                }
-
-                try {
-                    if (!tracebackParser.parse(curError, line)) {
-                        throw new SAXException("Unparseable traceback line \"" +
-                                               line + "\"");
-                    }
-                } catch (PyTestException pte) {
-                    throw new SAXException(pte.getMessage());
-                }
-            }
-        } else if (state == IN_STDOUT ||
-                   state == IN_STDERR)
-        {
-            if (curOut == null) {
-                throw new SAXException("No active output object");
-            }
-
-            curOut.addLine(line);
-        } else if (line.trim().length() > 0) {
-            System.out.println(":: " + line);
         }
+        parseLine(String.valueOf(ch, substart, (start + length) - substart));
     }
 
     /**
@@ -385,6 +359,53 @@ class TestXMLParser
             parser.parse(new InputSource(new ListReader(lines)));
         } catch (IOException ioe) {
             throw new PyTestException(ioe);
+        }
+    }
+
+    /**
+     * Parse a line of text.
+     *
+     * @param line text line
+     *
+     * @throws SAXException if there is a parsing error
+     */
+    private void parseLine(String line)
+        throws SAXException
+    {
+        if (state == IN_ERROR || state == IN_FAILURE) {
+            if (curError == null) {
+                throw new SAXException("No active error object");
+            }
+
+            if (!curError.hasExceptionText()) {
+                curError.setExceptionText(line);
+            } else if (line.trim().length() > 0) {
+                if (tracebackParser == null) {
+                    tracebackParser = new TracebackParser();
+                }
+
+                try {
+                    if (!tracebackParser.parse(curError, line)) {
+                        throw new SAXException("Unparseable traceback line \"" +
+                                               line + "\"");
+                    }
+                } catch (PyTestException pte) {
+                    throw new SAXException(pte.getMessage());
+                } catch (Error err) {
+//                    throw new SAXException(err.getMessage());
+throw err;
+                }
+            }
+        } else if (state == IN_STDOUT ||
+                   state == IN_STDERR)
+        {
+            if (curOut == null) {
+                throw new SAXException("No active output object");
+            }
+
+            curOut.addLine(line);
+        } else if (line.trim().length() > 0) {
+            System.out.println(":: " + line);
         }
     }
 
@@ -731,6 +752,9 @@ class TestTextParser
     void parse(List lines)
         throws PyTestException
     {
+        // set to true to see bad lines
+        final boolean loudError = false;
+
         StreamData outData = new StreamData();
         StreamData errData = new StreamData();
 
@@ -995,7 +1019,7 @@ class TestTextParser
                 continue;
             }
 
-            if (line.trim().length() > 0) {
+            if (line.trim().length() > 0 && loudError) {
                 System.out.println("BAD<" + getStateName(state) + ">: " + line);
             }
         }
@@ -1077,6 +1101,7 @@ public class PyTestParser
      *
      * @param lines unit test output lines
      * @param data test suite data container
+     * @param isXML <tt>false</tt> if unit test output is not XML
      *
      * @throws PyTestException if the lines cannot be parsed
      */
