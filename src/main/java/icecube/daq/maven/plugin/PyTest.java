@@ -32,21 +32,21 @@ public class PyTest
     /**
      * Python executable path.
      *
-     * @parameter expression="python"
+     * @parameter expression="${python}" default-value="python"
      */
     private String pythonExecutable;
 
     /**
      * Python source directory.
      *
-     * @parameter expression="src/main/python"
+     * @parameter expression="${sourceDir}" default-value="src/main/python"
      */
     private String sourceDirectory;
 
     /**
      * Python unit test directory.
      *
-     * @parameter expression="src/test/python"
+     * @parameter expression="${testDir}" default-value="src/test/python"
      */
     private String testDirectory;
 
@@ -125,6 +125,11 @@ public class PyTest
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        // make sure testName is in lower case
+        if (testName != null) {
+            testName = testName.toLowerCase();
+        }
+
         // if surefire.useFile is false, try pytest.useFile
         if (pyUseFile) {
             useFile = true;
@@ -171,7 +176,7 @@ public class PyTest
 
             // exclude test specified by -Dtest=
             if (testName != null) {
-                final String fName = f.getName();
+                final String fName = f.getName().toLowerCase();
 
                 if (!fName.startsWith(testName)) {
                     tstNames[i] = null;
