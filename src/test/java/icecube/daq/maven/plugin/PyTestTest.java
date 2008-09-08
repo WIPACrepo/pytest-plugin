@@ -18,9 +18,8 @@ public class PyTestTest
     public void testBasic()
         throws Exception
     {
-        System.err.println("Basedir is "+getBasedir());
-
-        File pom = new File(getBasedir(), "/target/test-classes/sample-pom.xml");
+        File pom = new File(getBasedir(),
+                            "/target/test-classes/sample-pom.xml");
 
         PyTest pyTest = (PyTest) lookupMojo("pytest", pom);
         assertNotNull(pyTest);
