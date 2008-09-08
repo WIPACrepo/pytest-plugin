@@ -1,0 +1,22 @@
+testAddRemove (__main__.TestDAQPool) ... ok
+testBuildMissingInput (__main__.TestDAQPool) ... ok
+testBuildMissingOutput (__main__.TestDAQPool) ... ok
+testBuildReturnSet (__main__.TestDAQPool) ... ok
+testEmpty (__main__.TestDAQPool) ... ok
+testStartRun (__main__.TestDAQPool) ... FAIL
+
+======================================================================
+FAIL: testStartRun (__main__.TestDAQPool)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "DAQPoolTest.py", line 263, in testStartRun
+    self.failUnless(ordered, 'Runset was not reversed by stopRun()')
+AssertionError: Runset was not reversed by stopRun()
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.005s
+
+FAILED (failures=1)
+ValueError("No inputs found for 1 bar->foo outputs") in buildConnectionMap() (CnCServer.py:115) <- buildConnectionMap() (CnCServer.py:950) <- buildRunset() (CnCServer.py:997) <- makeRunset() (CnCServer.py:1062)
+ValueError("No outputs found for 1 bar->foo inputs (foo)") in buildConnectionMap() (CnCServer.py:124) <- buildConnectionMap() (CnCServer.py:950) <- buildRunset() (CnCServer.py:997) <- makeRunset() (CnCServer.py:1062)
+Unordered: bar

@@ -1,0 +1,38 @@
+testListsSim5 (__main__.DAQConfigTest) ... ok
+testListsSpsIC40IT6 (__main__.DAQConfigTest) ... ok
+testLookupSim5 (__main__.DAQConfigTest) ... ERROR
+testLookupSpsIC40IT6 (__main__.DAQConfigTest) ... ERROR
+testReplay (__main__.DAQConfigTest) ... ok
+
+======================================================================
+ERROR: testLookupSim5 (__main__.DAQConfigTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "DAQConfigTest.py", line 74, in testLookupSim5
+    self.lookup(cfg, dataList)
+  File "DAQConfigTest.py", line 29, in lookup
+    dom = cfg.getIDbyStringPos(data[2], data[3])
+  File "/Users/dglo/prj/pdaq-dev/dash/DAQConfig.py", line 320, in getIDbyStringPos
+    pos)
+  File "/Users/dglo/prj/pdaq-dev/dash/DAQConfig.py", line 164, in getIDbyStringPos
+    raise DOMNotInConfigException()
+DOMNotInConfigException
+
+======================================================================
+ERROR: testLookupSpsIC40IT6 (__main__.DAQConfigTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "DAQConfigTest.py", line 120, in testLookupSpsIC40IT6
+    self.lookup(cfg, dataList)
+  File "DAQConfigTest.py", line 29, in lookup
+    dom = cfg.getIDbyStringPos(data[2], data[3])
+  File "/Users/dglo/prj/pdaq-dev/dash/DAQConfig.py", line 320, in getIDbyStringPos
+    pos)
+  File "/Users/dglo/prj/pdaq-dev/dash/DAQConfig.py", line 164, in getIDbyStringPos
+    raise DOMNotInConfigException()
+DOMNotInConfigException
+
+----------------------------------------------------------------------
+Ran 5 tests in 12.852s
+
+FAILED (errors=2)

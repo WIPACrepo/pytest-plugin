@@ -1,0 +1,15 @@
+option -x not recognized
+Usage: DAQConfigTest.py [options] [test] [...]
+
+Options:
+  -h, --help       Show this message
+  -v, --verbose    Verbose output
+  -q, --quiet      Minimal output
+
+Examples:
+  DAQConfigTest.py                               - run default set of tests
+  DAQConfigTest.py MyTestSuite                   - run suite 'MyTestSuite'
+  DAQConfigTest.py MyTestCase.testSomething      - run MyTestCase.testSomething
+  DAQConfigTest.py MyTestCase                    - run all 'test*' test methods
+                                               in MyTestCase
+

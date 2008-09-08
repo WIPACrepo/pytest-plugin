@@ -1,0 +1,41 @@
+testLogFallback (__main__.TestDAQServer) ... Start of log at localhost:12345
+End of log
+log - - [2008-09-08 11:48:26.869023] Start of log at localhost:12345
+log - - [2008-09-08 11:48:26.869023] Start of log at localhost:12345
+log - - [2008-09-08 11:48:26.869124] End of log
+log - - [2008-09-08 11:48:26.869124] End of log
+Start of log at localhost:456778
+End of log
+new - - [2008-09-08 11:48:26.883501] Start of log at localhost:456778
+new - - [2008-09-08 11:48:26.883501] Start of log at localhost:456778
+new - - [2008-09-08 11:48:26.883565] End of log
+new - - [2008-09-08 11:48:26.883565] End of log
+Start of log at localhost:12345
+log - - [2008-09-08 11:48:26.889685] Start of log at localhost:12345
+log - - [2008-09-08 11:48:26.889685] Start of log at localhost:12345
+End of log
+log - - [2008-09-08 11:48:27.391916] End of log
+log - - [2008-09-08 11:48:27.391916] End of log
+ok
+testNoRunset (__main__.TestDAQServer) ... ok
+testRegister (__main__.TestDAQServer) ... ok
+testRegisterWithLog (__main__.TestDAQServer) ... ok
+testRunset (__main__.TestDAQServer) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.001s
+
+OK
+Got registration for ID#1 foo#0 at localhost:666
+Start of log at localhost:123
+Got registration for ID#2 foo#0 at localhost:666
+End of log
+Got registration for ID#3 foo#0 at localhost:666
+Built runset with the following components:
+ID#3 foo#0 at localhost:666
+
+ID#3 foo#0 at localhost:666 connected
+Start of log at abc:777
+Version info: unknown unknown unknown unknown unknown trunk 3472:3474M
+End of log
+Start of log at abc:777

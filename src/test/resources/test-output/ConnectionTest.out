@@ -1,0 +1,64 @@
+testComplex (__main__.ConnectionTest) ... ok
+testSimple (__main__.ConnectionTest) ... ok
+testStandard (__main__.ConnectionTest) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 11.013s
+
+OK
+MockID#1 A#1 at None:-1 [DataA=>] -> idle
+End of log
+MockID#2 A#2 at None:-2 [DataA=>] -> idle
+End of log
+MockID#3 B#1 at None:-3 [DataB=>] -> idle
+End of log
+MockID#4 B#2 at None:-4 [DataB=>] -> idle
+End of log
+MockID#5 C#0 at None:-5 [DataC=> -6=>DataA] -> idle
+End of log
+MockID#6 D#0 at None:-6 [DataD=> -8=>DataB] -> idle
+End of log
+MockID#7 E#0 at None:-7 [DataE=> -10=>BackH -11=>DataC] -> idle
+End of log
+MockID#8 F#0 at None:-8 [DataF=> -13=>DataE -14=>DataD] -> idle
+End of log
+MockID#9 G#0 at None:-9 [DataG=> -16=>DataF] -> idle
+End of log
+MockID#10 H#0 at None:-10 [DataH=> BackH=> -19=>DataG] -> idle
+End of log
+MockID#11 I#0 at None:-11 [-20=>DataH] -> idle
+End of log
+MockID#12 oneA#0 at None:-1 [out1=>] -> idle
+End of log
+MockID#13 oneB#0 at None:-2 [out1=>] -> idle
+End of log
+MockID#14 two#0 at None:-3 [out2=> -24=>out1] -> idle
+End of log
+MockID#15 three#0 at None:-4 [out3=> -26=>out2] -> idle
+End of log
+MockID#16 four#0 at None:-5 [-27=>out3] -> idle
+End of log
+MockID#17 GlobalTrigger#0 at None:-1 [glblTrigger=> -29=>inIceTrigger -30=>iceTopTrigger] -> idle
+End of log
+MockID#18 InIceTrigger#0 at None:-2 [inIceTrigger=> -32=>stringHit] -> idle
+End of log
+MockID#19 IceTopTrigger#0 at None:-3 [iceTopTrigger=> -34=>icetopHit] -> idle
+End of log
+MockID#20 EventBuilder#0 at None:-4 [rdoutReq=> -36=>glblTrigger -37=>rdoutData] -> idle
+End of log
+MockID#21 StringHub#10 at None:-5 [stringHit=> rdoutData=> -40=>rdoutReq] -> idle
+End of log
+MockID#22 StringHub#11 at None:-6 [stringHit=> rdoutData=> -43=>rdoutReq] -> idle
+End of log
+MockID#23 StringHub#12 at None:-7 [stringHit=> rdoutData=> -46=>rdoutReq] -> idle
+End of log
+MockID#24 StringHub#13 at None:-8 [stringHit=> rdoutData=> -49=>rdoutReq] -> idle
+End of log
+MockID#25 IcetopHub#20 at None:-9 [icetopHit=> rdoutData=> -52=>rdoutReq] -> idle
+End of log
+MockID#26 IcetopHub#21 at None:-10 [icetopHit=> rdoutData=> -55=>rdoutReq] -> idle
+End of log
+MockID#27 IcetopHub#22 at None:-11 [icetopHit=> rdoutData=> -58=>rdoutReq] -> idle
+End of log
+MockID#28 IcetopHub#23 at None:-12 [icetopHit=> rdoutData=> -61=>rdoutReq] -> idle
+End of log

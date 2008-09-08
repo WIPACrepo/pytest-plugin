@@ -1,0 +1,22 @@
+<testsuite errors="0" failures="1" name="unittest.TestSuite" tests="6" time="4.005">
+  <testcase classname="__main__.TestDAQPool" name="testAddRemove" time="0.0000"></testcase>
+  <testcase classname="__main__.TestDAQPool" name="testBuildMissingInput" time="0.0013"></testcase>
+  <testcase classname="__main__.TestDAQPool" name="testBuildMissingOutput" time="0.0003"></testcase>
+  <testcase classname="__main__.TestDAQPool" name="testBuildReturnSet" time="2.0007"></testcase>
+  <testcase classname="__main__.TestDAQPool" name="testEmpty" time="0.0000"></testcase>
+  <testcase classname="__main__.TestDAQPool" name="testStartRun" time="2.0022">
+    <failure type="exceptions.AssertionError">Runset was not reversed by stopRun()
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/unittest.py", line 260, in run
+    testMethod()
+  File "DAQPoolTest.py", line 263, in testStartRun
+    self.failUnless(ordered, 'Runset was not reversed by stopRun()')
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/unittest.py", line 309, in failUnless
+    if not expr: raise self.failureException, msg
+    </failure>
+  </testcase>
+  <system-out><![CDATA[ValueError("No inputs found for 1 bar->foo outputs") in buildConnectionMap() (CnCServer.py:115) <- buildConnectionMap() (CnCServer.py:950) <- buildRunset() (CnCServer.py:997) <- makeRunset() (CnCServer.py:1062)
+ValueError("No outputs found for 1 bar->foo inputs (foo)") in buildConnectionMap() (CnCServer.py:124) <- buildConnectionMap() (CnCServer.py:950) <- buildRunset() (CnCServer.py:997) <- makeRunset() (CnCServer.py:1062)
+Unordered: bar
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

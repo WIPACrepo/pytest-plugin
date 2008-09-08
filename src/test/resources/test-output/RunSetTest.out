@@ -1,0 +1,7 @@
+testEmpty (__main__.TestRunSet) ... ok
+testSet (__main__.TestRunSet) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+OK

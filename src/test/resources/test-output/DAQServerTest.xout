@@ -1,0 +1,15 @@
+option -x not recognized
+Usage: DAQServerTest.py [options] [test] [...]
+
+Options:
+  -h, --help       Show this message
+  -v, --verbose    Verbose output
+  -q, --quiet      Minimal output
+
+Examples:
+  DAQServerTest.py                               - run default set of tests
+  DAQServerTest.py MyTestSuite                   - run suite 'MyTestSuite'
+  DAQServerTest.py MyTestCase.testSomething      - run MyTestCase.testSomething
+  DAQServerTest.py MyTestCase                    - run all 'test*' test methods
+                                               in MyTestCase
+
