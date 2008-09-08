@@ -1,0 +1,24 @@
+testExcBlank (__main__.xmlTest) ... ERROR
+testExcText (__main__.xmlTest) ... ERROR
+testGood (__main__.xmlTest) ... ok
+
+======================================================================
+ERROR: testExcBlank (__main__.xmlTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "subtst/xmlTest.py", line 13, in testExcBlank
+    raise Exception()
+Exception
+
+======================================================================
+ERROR: testExcText (__main__.xmlTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "subtst/xmlTest.py", line 10, in testExcText
+    raise Exception("Something")
+Exception: Something
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+FAILED (errors=2)

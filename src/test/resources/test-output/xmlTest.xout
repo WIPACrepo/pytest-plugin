@@ -1,0 +1,21 @@
+<testsuite errors="2" failures="0" name="unittest.TestSuite" tests="3" time="0.001">
+  <testcase classname="__main__.xmlTest" name="testExcBlank" time="0.0005">
+    <error type="exceptions.Exception">
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/unittest.py", line 260, in run
+    testMethod()
+  File "subtst/xmlTest.py", line 13, in testExcBlank
+    raise Exception()
+    </error>
+  </testcase>
+  <testcase classname="__main__.xmlTest" name="testExcText" time="0.0001">
+    <error type="exceptions.Exception">Something
+  File "/opt/local/Library/Frameworks/Python.framework/Versions/2.5/lib/python2.5/unittest.py", line 260, in run
+    testMethod()
+  File "subtst/xmlTest.py", line 10, in testExcText
+    raise Exception("Something")
+    </error>
+  </testcase>
+  <testcase classname="__main__.xmlTest" name="testGood" time="0.0000"></testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
