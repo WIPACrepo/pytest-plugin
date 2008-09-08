@@ -59,6 +59,17 @@ class TraceFrame
 
         this.test = test;
     }
+
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder("TraceFrame[");
+        buf.append(file).append('#').append(line).append('@').append(test);
+        if (srcLine != null) {
+            buf.append('*').append(srcLine);
+        }
+        buf.append(']');
+        return buf.toString();
+    }
 }
 
 /**
@@ -208,5 +219,22 @@ class ErrorData
     void setFrameTest(String test)
     {
         curFrame.setTest(test);
+    }
+
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder(isError ? "ERROR" : "FAILURE");
+        buf.append('[');
+        if (excName != null) {
+            buf.append(excName);
+        }
+        if (excText != null) {
+            buf.append('/').append(excText);
+        }
+        if (curFrame != null) {
+            buf.append('|').append(curFrame);
+        }
+        buf.append(']');
+        return buf.toString();
     }
 }
