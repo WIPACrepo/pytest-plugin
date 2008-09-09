@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>icecube.daq.maven.plugin</groupId>
+  <groupId>edu.wisc.icecube</groupId>
   <artifactId>pytest-plugin</artifactId>
   <version>0.1</version>
   <name>Python Unit Test Plugin</name>
@@ -13,9 +13,13 @@
   <url>http://icecube.wisc.edu/~dglo/pytest-plugin</url>
 
   <distributionManagement>
-    <site>
+    <repository>
       <id>icecube-maven-repository</id>
       <url>scp://pub.icecube.wisc.edu/net/maven2/repository</url>
+    </repository>
+    <site>
+      <id>dglo-website</id>
+      <url>scp://pub.icecube.wisc.edu/home/dglo/public_html/pytest-plugin</url>
     </site>
   </distributionManagement>
 
