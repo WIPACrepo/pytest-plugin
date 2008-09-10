@@ -15,11 +15,11 @@
   <distributionManagement>
     <repository>
       <id>icecube-maven-repository</id>
-      <url>scp://pub.icecube.wisc.edu/net/maven2/repository</url>
+      <url>scpexe://pub.icecube.wisc.edu/net/maven2/repository</url>
     </repository>
     <site>
       <id>dglo-website</id>
-      <url>scp://pub.icecube.wisc.edu/home/dglo/public_html/pytest-plugin</url>
+      <url>scpexe://pub.icecube.wisc.edu/home/dglo/public_html/pytest-plugin</url>
     </site>
   </distributionManagement>
 
