@@ -102,13 +102,22 @@ public class PyTest
      */
     private boolean skipTests;
 
-    private static File buildPath(String dir, String defaultDir)
+    /**
+     * The base directory of the project being tested. This can be obtained in
+     * your unit test by System.getProperty("basedir").
+     * 
+     * @parameter expression="${basedir}"
+     * @required
+     */
+    private File baseDir;
+
+    private static File buildPath(File baseDir, String dir, String defaultDir)
     {
         if (dir == null) {
             dir = defaultDir;
         }
 
-        File path = new File(dir);
+        File path = new File(baseDir, dir);
         if (!path.isAbsolute()) {
             path = new File(System.getProperty("user.dir"), dir);
         }
@@ -147,13 +156,13 @@ public class PyTest
             useFile = true;
         }
 
-        File srcPath = buildPath(sourceDirectory, "src/main/python");
+        File srcPath = buildPath(baseDir, sourceDirectory, "src/main/python");
         if (!srcPath.exists()) {
             throw new MojoExecutionException("Source directory \"" + srcPath +
                                              "\" does not exist");
         }
 
-        File testPath = buildPath(testDirectory, "src/test/python");
+        File testPath = buildPath(baseDir, testDirectory, "src/test/python");
         if (!srcPath.exists()) {
             throw new MojoExecutionException("Test directory \"" + testPath +
                                              "\" does not exist");
