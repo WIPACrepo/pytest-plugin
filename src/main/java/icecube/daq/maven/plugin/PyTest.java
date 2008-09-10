@@ -227,11 +227,11 @@ public class PyTest
             TestRunner runner = new TestRunner(pythonExecutable, f);
             try {
                 // try running tests using xmlrunner
-                runner.runTests(path, "-x");
+                runner.runTests(testPath, path, "-x");
                 // if that failed, use whatever test runner is available
                 if (!runner.isTextOutput() && !runner.isXMLOutput()) {
                     runner.reset();
-                    runner.runTests(path, "-v");
+                    runner.runTests(testPath, path, "-v");
                 }
 
                 if (runner.hasErrorLines()) {
@@ -494,7 +494,7 @@ class TestRunner
      *
      * @throws PyTestException if there is a problem
      */
-    void runTests(String pathEnv, String arg)
+    void runTests(File testDir, String pathEnv, String arg)
         throws PyTestException
     {
         ArrayList args = new ArrayList();
@@ -506,6 +506,9 @@ class TestRunner
 
         ProcessBuilder pBldr = new ProcessBuilder(args);
         pBldr.redirectErrorStream(true);
+
+        // set working directory
+        pBldr.directory(testDir);
 
         // set PYTHONPATH envvar
         Map env = pBldr.environment();
