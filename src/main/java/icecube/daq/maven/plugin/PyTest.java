@@ -95,6 +95,13 @@ public class PyTest
      */
     private String[] excludes;
 
+    /**
+     * Set this to 'true' to skip running tests.
+     * 
+     * @parameter expression="${skipTests}"
+     */
+    private boolean skipTests;
+
     private static File buildPath(String dir, String defaultDir)
     {
         if (dir == null) {
@@ -125,6 +132,11 @@ public class PyTest
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        // don't bother doing anything if we're skipping tests
+        if (skipTests) {
+            return;
+        }
+
         // make sure testName is in lower case
         if (testName != null) {
             testName = testName.toLowerCase();
