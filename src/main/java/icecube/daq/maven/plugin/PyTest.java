@@ -103,6 +103,13 @@ public class PyTest
     private boolean skipTests;
 
     /**
+     * Set this to 'true' to skip running tests.
+     *
+     * @parameter expression="${maven.test.skip}" default-value="false"
+     */
+    private boolean mavenTestSkip;
+
+    /**
      * The base directory of the project being tested. This can be obtained in
      * your unit test by System.getProperty("basedir").
      * 
@@ -142,7 +149,7 @@ public class PyTest
         throws MojoExecutionException, MojoFailureException
     {
         // don't bother doing anything if we're skipping tests
-        if (skipTests) {
+        if (skipTests || mavenTestSkip) {
             return;
         }
 

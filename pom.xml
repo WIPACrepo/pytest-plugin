@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.wisc.icecube</groupId>
   <artifactId>pytest-plugin</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
   <name>Python Unit Test Plugin</name>
   <packaging>maven-plugin</packaging>
   <description>Python unit test plugin</description>
