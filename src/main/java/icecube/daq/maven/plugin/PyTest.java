@@ -350,6 +350,29 @@ class TestRunner
      */
     private static final String PATH_ENV_NAME = "PYTHONPATH";
 
+    /** Active process. */
+    private static Process testProc = null;
+    /** Process lock object. */
+    private static Object procLock = new Object();
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread("PyTest shutdown" ) {
+                public void run()
+                {
+                    synchronized (procLock) {
+                        if (testProc != null) {
+                            Process tmpProc = testProc;
+                            testProc = null;
+
+                            System.err.println( "Destroying test process" );
+                            tmpProc.destroy();
+                            System.err.println( "Destroyed test process" );
+                        }
+                    }
+                }
+            });
+    }
+  
     /** Python executable. */
     private String pythonExecutable;
     /** Python test script. */
@@ -521,22 +544,25 @@ class TestRunner
         Map env = pBldr.environment();
         env.put(PATH_ENV_NAME, pathEnv);
 
-        Process proc;
-        try {
-            proc = pBldr.start();
-        } catch (IOException ioe) {
-            throw new PyTestException("Couldn't run " + testFile, ioe);
-        }
-
-        try {
-            proc.getOutputStream().close();
-        } catch (IOException ioe) {
-            // ignore errors on close
-        }
-
-        BufferedReader stdout = openReader(proc.getInputStream());
-        // ignoring error stream
+        BufferedReader stdout = null;
         BufferedReader stderr = null;
+
+        synchronized (procLock) {
+            try {
+                testProc = pBldr.start();
+            } catch (IOException ioe) {
+                throw new PyTestException("Couldn't run " + testFile, ioe);
+            }
+
+            try {
+                testProc.getOutputStream().close();
+            } catch (IOException ioe) {
+                // ignore errors on close
+            }
+
+            stdout = openReader(testProc.getInputStream());
+            // ignoring error stream
+        }
 
         while (stdout != null || stderr != null) {
             String line;
@@ -560,6 +586,10 @@ class TestRunner
                     try {
                         line = rdr.readLine();
                     } catch (IOException ioe) {
+                        if (testProc == null) {
+                            break;
+                        }
+
                         throw new PyTestException("Couldn't read " + name, ioe);
                     }
 
@@ -589,13 +619,17 @@ class TestRunner
             }
         }
 
-        try {
-            proc.waitFor();
-        } catch (InterruptedException ie) {
-            throw new PyTestException("Couldn't wait for " + testFile, ie);
-        }
+        synchronized (procLock) {
+            try {
+                if (testProc != null) {
+                    testProc.waitFor();
+                }
+            } catch (InterruptedException ie) {
+                throw new PyTestException("Couldn't wait for " + testFile, ie);
+            }
 
-        exitVal = proc.exitValue();
+            exitVal = testProc.exitValue();
+        }
 
         if (isText && isXML) {
             final String errMsg = "Test output has both text and XML elements";
